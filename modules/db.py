@@ -1,13 +1,16 @@
 import mysql.connector
 import os
 
-class Database():
+
+class Database:
     def __init__(self):
-        self.connection = mysql.connector.connect(host=os.getenv('DB_URL'),
-                     port=3306,
-                     user=os.getenv('DB_USR'),
-                     passwd=os.getenv('DB_PWD'),
-                     db="production")
+        self.connection = mysql.connector.connect(
+            host=os.getenv('DB_URL'),
+            port=3306,
+            user=os.getenv('DB_USR'),
+            passwd=os.getenv('DB_PWD'),
+            db='production'
+        )
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -17,17 +20,20 @@ class Database():
     def test_connection(self):
         query = 'SELECT VERSION()'
         self.cursor.execute(query)
-        record = self.cursor.fetchall()
+        record = self.cursor.fetchone()
         return record
 
     def get_random_record(self):
-        query = ('SELECT * FROM debug_production.buffer_one_c_products_record '
-                             'where deactivation_time is null and approve_time is null ORDER BY RAND() LIMIT 1')
+        query = (
+            'SELECT * FROM debug_production.buffer_one_c_products_record '
+            'WHERE deactivation_time IS NULL AND approve_time IS NULL '
+            'ORDER BY RAND() LIMIT 1'
+        )
         self.cursor.execute(query)
         record = self.cursor.fetchall()
-        return record[0][4],record[0][2],record[0][1]
+        return record[0][4], record[0][2], record[0][1]
 
-    def search_with_random_parameter(self,parameter):
+    def search_with_random_parameter(self, parameter):
         words = parameter.split()
         conditions = [
             f"(product_name LIKE '%{word}%' OR "
@@ -35,18 +41,26 @@ class Database():
             f"vendor_code LIKE '%{word}%')"
             for word in words
         ]
-        conditions_string = " AND ".join(conditions)
-        query = f"SELECT * FROM debug_production.buffer_one_c_products_record WHERE " \
-                f"approve_by_id IS NULL AND deactivation_time IS NULL AND " \
-                f"{conditions_string} ORDER BY id DESC"
+        conditions_string = ' AND '.join(conditions)
+        query = (
+            f"SELECT * FROM debug_production.buffer_one_c_products_record "
+            f"WHERE approve_by_id IS NULL AND deactivation_time IS NULL AND "
+            f"{conditions_string} ORDER BY id DESC"
+        )
         self.cursor.execute(query)
-        record = self.cursor.fetchall()
+        column_names = [desc[0] for desc in self.cursor.description]
+        rows = self.cursor.fetchall()
+        result_dict = {col: [] for col in column_names}
+        for row in rows:
+            for col_name, value in zip(column_names, row):
+                result_dict[col_name].append(value)
+        return result_dict
 
-        return record
-
-    def search_for_product(self,parameter):
-        query = ('SELECT * FROM debug_production.buffer_one_c_products_record '
-                 f'where deactivation_time is null and approve_time is null and product_name = "{parameter}"')
+    def search_for_product(self, parameter):
+        query = (
+            'SELECT * FROM debug_production.buffer_one_c_products_record '
+            f'WHERE deactivation_time IS NULL AND approve_time IS NULL AND product_name = "{parameter}"'
+        )
         self.cursor.execute(query)
         record = self.cursor.fetchall()
         return len(record)
