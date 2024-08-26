@@ -6,12 +6,12 @@ class TestBufferPage:
     db = Database()
 
     @pytest.mark.task1
-    def test_database_connection(self):
+    def test_database_connection(self) -> None:
         assert self.db.test_connection()
 
     @pytest.mark.task1
     @pytest.mark.parametrize('search_param', (db.get_random_record()))
-    def test_check_admin_with_parameter(self, driver_conn, search_param):
+    def test_check_admin_with_parameter(self, driver_conn, search_param) -> None:
         normalized_data_from_admin = driver_conn.search_filtered_records(search_param)
         data_from_db = self.db.search_with_random_parameter(search_param)
 
@@ -27,11 +27,11 @@ class TestBufferPage:
         'Ajax HubKit',
         'Ajax CenterButton (2-gang) vertical [55]'
     ])
-    def test_socket_quantity(self, driver_conn, parameter):
+    def test_socket_quantity(self, driver_conn, parameter) -> None:
         res_from_db = self.db.search_for_product(parameter)
         res_from_admin = driver_conn.get_quantity_for_product(parameter)
         assert res_from_db == res_from_admin
 
     @classmethod
-    def shutdown_db(cls):
+    def shutdown_db(cls) -> None:
         cls.db.close()

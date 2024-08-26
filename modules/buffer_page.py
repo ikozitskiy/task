@@ -1,37 +1,38 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from typing import List
 from webdriver_manager.chrome import ChromeDriverManager
 from locators import Locators
 
 
-def normalize_text_elements(elements):
+def normalize_text_elements(elements) -> List[any, ...]:
     return [None if element.text == '-' else element.text for element in elements]
 
 
-def normalize_attribute_elements(elements, attribute):
+def normalize_attribute_elements(elements, attribute) -> List[any, ...]:
     return [1 if element.get_attribute(attribute) == 'True' else 0 for element in elements]
 
 
 class BufferPage:
     URL = os.getenv('ADM_URL')
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
         self.driver.get(BufferPage.URL)
         self.driver.maximize_window()
 
-    def login(self):
+    def login(self) -> None:
         login_elem = self.driver.find_element(*Locators.USERNAME_FIELD)
         pass_elem = self.driver.find_element(*Locators.PASSWORD_FIELD)
         login_elem.send_keys(os.getenv('ADM_USR'))
         pass_elem.send_keys(os.getenv('ADM_PWD'))
         self.driver.find_element(*Locators.LOGIN_BUTTON).click()
 
-    def close(self):
+    def close(self) -> None:
         self.driver.close()
 
-    def search_filtered_records(self, search_param):
+    def search_filtered_records(self, search_param) -> dict[str:List[any, ...]]:
         search_field = self.driver.find_element(*Locators.SEARCH_BAR)
         search_field.clear()
         search_field.send_keys(search_param)
@@ -56,7 +57,7 @@ class BufferPage:
         }
         return normalized_data_dict_from_admin
 
-    def get_quantity_for_product(self, parameter):
+    def get_quantity_for_product(self, parameter) -> int:
         self.driver.find_element(*Locators.SEARCH_BAR).clear()
         self.driver.find_element(*Locators.SEARCH_BUTTON).click()
         self.driver.find_element(*Locators.PRODUCT_NAME_DETAILS).click()

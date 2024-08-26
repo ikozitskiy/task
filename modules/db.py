@@ -1,9 +1,11 @@
 import mysql.connector
 import os
 
+from typing import List, Tuple
+
 
 class Database:
-    def __init__(self):
+    def __init__(self) -> None:
         self.connection = mysql.connector.connect(
             host=os.getenv('DB_URL'),
             port=3306,
@@ -13,17 +15,17 @@ class Database:
         )
         self.cursor = self.connection.cursor()
 
-    def close(self):
+    def close(self) -> None:
         if self.cursor is not None:
             self.cursor.close()
 
-    def test_connection(self):
+    def test_connection(self) -> str:
         query = 'SELECT VERSION()'
         self.cursor.execute(query)
         record = self.cursor.fetchone()
         return record
 
-    def get_random_record(self):
+    def get_random_record(self) -> tuple:
         query = (
             'SELECT * FROM debug_production.buffer_one_c_products_record '
             'WHERE deactivation_time IS NULL AND approve_time IS NULL '
@@ -33,7 +35,7 @@ class Database:
         record = self.cursor.fetchone()
         return record[4], record[2], record[1]
 
-    def search_with_random_parameter(self, parameter):
+    def search_with_random_parameter(self, parameter) -> List[Tuple[any, ...]]:
         words = parameter.split()
         conditions = [
             f"(product_name LIKE '%{word}%' OR "
@@ -56,7 +58,7 @@ class Database:
                 result_dict[col_name].append(value)
         return result_dict
 
-    def search_for_product(self, parameter):
+    def search_for_product(self, parameter) -> int:
         query = (
             'SELECT * FROM debug_production.buffer_one_c_products_record '
             f'WHERE deactivation_time IS NULL AND approve_time IS NULL AND product_name = "{parameter}"'
