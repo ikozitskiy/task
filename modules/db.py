@@ -30,8 +30,8 @@ class Database:
             'ORDER BY RAND() LIMIT 1'
         )
         self.cursor.execute(query)
-        record = self.cursor.fetchall()
-        return record[0][4], record[0][2], record[0][1]
+        record = self.cursor.fetchone()
+        return record[4], record[2], record[1]
 
     def search_with_random_parameter(self, parameter):
         words = parameter.split()
