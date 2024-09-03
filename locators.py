@@ -35,3 +35,4 @@ class Locators:
     APPLY_BUTTON = (By.XPATH, '//button[contains(text(), "Apply")]')
     TOTAL_RESULTS = (By.CLASS_NAME, 'small.quiet')
     CLEAR_FILTERS_LINK = (By.XPATH, '//h3[@id="changelist-filter-clear"]/a')
+
