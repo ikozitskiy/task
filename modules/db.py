@@ -1,11 +1,17 @@
 import mysql.connector
 import os
 
+<<<<<<< HEAD
 from typing import List, Tuple, Any, Dict
 
 
 class Database:
     def __init__(self) -> None:
+=======
+
+class Database:
+    def __init__(self):
+>>>>>>> dc52b0d7051906cee607538534b1462dec5df510
         self.connection = mysql.connector.connect(
             host=os.getenv('DB_URL'),
             port=3306,
@@ -15,6 +21,7 @@ class Database:
         )
         self.cursor = self.connection.cursor()
 
+<<<<<<< HEAD
     def close(self) -> None:
         if self.cursor is not None:
             self.cursor.close()
@@ -26,6 +33,19 @@ class Database:
         return record[0]
 
     def get_random_record(self) -> Tuple:
+=======
+    def close(self):
+        if self.cursor is not None:
+            self.cursor.close()
+
+    def test_connection(self):
+        query = 'SELECT VERSION()'
+        self.cursor.execute(query)
+        record = self.cursor.fetchone()
+        return record
+
+    def get_random_record(self):
+>>>>>>> dc52b0d7051906cee607538534b1462dec5df510
         query = (
             'SELECT * FROM debug_production.buffer_one_c_products_record '
             'WHERE deactivation_time IS NULL AND approve_time IS NULL '
@@ -35,7 +55,11 @@ class Database:
         record = self.cursor.fetchone()
         return record[4], record[2], record[1]
 
+<<<<<<< HEAD
     def search_with_random_parameter(self, parameter) -> Dict[str, List[Any]]:
+=======
+    def search_with_random_parameter(self, parameter):
+>>>>>>> dc52b0d7051906cee607538534b1462dec5df510
         words = parameter.split()
         conditions = [
             f"(product_name LIKE '%{word}%' OR "
@@ -58,11 +82,18 @@ class Database:
                 result_dict[col_name].append(value)
         return result_dict
 
+<<<<<<< HEAD
     def search_for_product(self, parameter) -> int:
         query = (
             'SELECT * FROM debug_production.buffer_one_c_products_record '
             f'WHERE deactivation_time IS NULL AND approve_time IS NULL '
             f'AND product_name = "{parameter}"'
+=======
+    def search_for_product(self, parameter):
+        query = (
+            'SELECT * FROM debug_production.buffer_one_c_products_record '
+            f'WHERE deactivation_time IS NULL AND approve_time IS NULL AND product_name = "{parameter}"'
+>>>>>>> dc52b0d7051906cee607538534b1462dec5df510
         )
         self.cursor.execute(query)
         record = self.cursor.fetchall()

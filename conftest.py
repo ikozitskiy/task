@@ -1,4 +1,5 @@
 import pytest
+<<<<<<< HEAD
 from typing import Tuple
 
 from modules.buffer_page import BufferPage
@@ -10,11 +11,21 @@ from modules.driver import Driver
 def db_conn() -> Database:
     db = Database()
     assert db.test_connection()
+=======
+from modules.buffer_page import BufferPage
+from modules.db import Database
+
+
+@pytest.fixture(scope='session')
+def db_conn():
+    db = Database()
+>>>>>>> dc52b0d7051906cee607538534b1462dec5df510
     yield db
     db.close()
 
 
 @pytest.fixture(scope='module')
+<<<<<<< HEAD
 def driver_conn() -> BufferPage:
     driver_wrapper = Driver()
     driver_wrapper.start_browser(BufferPage.URL)
@@ -34,3 +45,10 @@ def random_params(db_conn) -> Tuple[str, str, str]:
 def index(request, random_params) -> str:
     param_index = request.param
     return random_params[param_index]
+=======
+def driver_conn():
+    driver = BufferPage()
+    driver.login()
+    yield driver
+    driver.close()
+>>>>>>> dc52b0d7051906cee607538534b1462dec5df510
