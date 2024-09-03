@@ -34,8 +34,5 @@ class Locators:
     FILTER_OPTION = lambda param: (By.XPATH, f"//option[@value='{param}']")
     APPLY_BUTTON = (By.XPATH, '//button[contains(text(), "Apply")]')
     TOTAL_RESULTS = (By.CLASS_NAME, 'small.quiet')
-<<<<<<< HEAD
     CLEAR_FILTERS_LINK = (By.XPATH, '//h3[@id="changelist-filter-clear"]/a')
-=======
-    CLEAR_FILTERS_LINK = (By.XPATH, '//h3[@id="changelist-filter-clear"]/a')
->>>>>>> dc52b0d7051906cee607538534b1462dec5df510
+

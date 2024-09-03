@@ -10,15 +10,6 @@ from modules.driver import Driver
 def db_conn() -> Database:
     db = Database()
     assert db.test_connection()
-
-from modules.buffer_page import BufferPage
-from modules.db import Database
-
-
-@pytest.fixture(scope='session')
-def db_conn():
-    db = Database()
-
     yield db
     db.close()
 
@@ -43,10 +34,3 @@ def random_params(db_conn) -> Tuple[str, str, str]:
 def index(request, random_params) -> str:
     param_index = request.param
     return random_params[param_index]
-
-def driver_conn():
-    driver = BufferPage()
-    driver.login()
-    yield driver
-    driver.close()
-
